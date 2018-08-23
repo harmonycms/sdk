@@ -28,6 +28,7 @@ class Client
     const USER_AGENT = 'harmony-sdk (https://github.com/projectharmony/sdk)';
 
     /** Receiver constants */
+    const RECEIVER_EVENTS   = 'Events';
     const RECEIVER_PACKAGES = 'Packages';
     const RECEIVER_PROJECTS = 'Projects';
     const RECEIVER_USERS    = 'Users';
