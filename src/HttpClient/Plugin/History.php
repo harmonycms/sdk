@@ -1,6 +1,6 @@
 <?php
 
-namespace Harmony\SDK\HttpClient\Plugin;
+namespace Harmony\Sdk\HttpClient\Plugin;
 
 use Http\Client\Common\Plugin\Journal;
 use Http\Client\Exception;
@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface;
  * Class History
  * A plugin to remember the last response.
  *
- * @package Harmony\SDK\HttpClient\Plugin
+ * @package Harmony\Sdk\HttpClient\Plugin
  */
 class History implements Journal
 {

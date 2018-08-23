@@ -1,8 +1,8 @@
 <?php
 
-namespace Harmony\SDK\HttpClient\Plugin;
+namespace Harmony\Sdk\HttpClient\Plugin;
 
-use Harmony\SDK\Client;
+use Harmony\Sdk\Client;
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
@@ -13,7 +13,7 @@ use RuntimeException;
  * Add authentication to the request.
  *
  * @author  Tobias Nyholm <tobias.nyholm@gmail.com>
- * @package Harmony\SDK\HttpClient\Plugin
+ * @package Harmony\Sdk\HttpClient\Plugin
  */
 class Authentication implements Plugin
 {

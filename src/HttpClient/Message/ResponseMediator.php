@@ -1,14 +1,14 @@
 <?php
 
-namespace Harmony\SDK\HttpClient\Message;
+namespace Harmony\Sdk\HttpClient\Message;
 
-use Harmony\SDK\Exception\ApiLimitExceedException;
+use Harmony\Sdk\Exception\ApiLimitExceedException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ResponseMediator
  *
- * @package Harmony\SDK\HttpClient\Message
+ * @package Harmony\Sdk\HttpClient\Message
  */
 class ResponseMediator
 {

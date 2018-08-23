@@ -1,13 +1,13 @@
 <?php
 
-namespace Harmony\SDK\Receiver;
+namespace Harmony\Sdk\Receiver;
 
-use Harmony\SDK\Client;
+use Harmony\Sdk\Client;
 
 /**
  * Trait Receiver
  *
- * @package Harmony\SDK\Receiver
+ * @package Harmony\Sdk\Receiver
  */
 trait Receiver
 {

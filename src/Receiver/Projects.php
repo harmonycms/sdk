@@ -1,11 +1,11 @@
 <?php
 
-namespace Harmony\SDK\Receiver;
+namespace Harmony\Sdk\Receiver;
 
 /**
  * Class Projects
  *
- * @package Harmony\SDK\Receiver
+ * @package Harmony\Sdk\Receiver
  */
 class Projects
 {

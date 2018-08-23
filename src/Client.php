@@ -1,14 +1,14 @@
 <?php
 
-namespace Harmony\SDK;
+namespace Harmony\Sdk;
 
 use Exception;
 use Http\Client\HttpClient;
-use Harmony\SDK\HttpClient\Builder;
-use Harmony\SDK\HttpClient\Message\ResponseMediator;
-use Harmony\SDK\HttpClient\Plugin\Authentication;
-use Harmony\SDK\HttpClient\Plugin\History;
-use Harmony\SDK\Receiver\Receiver;
+use Harmony\Sdk\HttpClient\Builder;
+use Harmony\Sdk\HttpClient\Message\ResponseMediator;
+use Harmony\Sdk\HttpClient\Plugin\Authentication;
+use Harmony\Sdk\HttpClient\Plugin\History;
+use Harmony\Sdk\Receiver\Receiver;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin;
 use Http\Discovery\UriFactoryDiscovery;
@@ -18,7 +18,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class Client
  *
- * @package Harmony\SDK
+ * @package Harmony\Sdk
  */
 class Client
 {

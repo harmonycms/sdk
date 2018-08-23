@@ -1,6 +1,6 @@
 <?php
 
-namespace Harmony\SDK\Exception;
+namespace Harmony\Sdk\Exception;
 
 use RuntimeException;
 

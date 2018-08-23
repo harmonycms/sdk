@@ -1,6 +1,6 @@
 <?php
 
-namespace Harmony\SDK\HttpClient;
+namespace Harmony\Sdk\HttpClient;
 
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin;
@@ -16,7 +16,7 @@ use Http\Message\StreamFactory;
 /**
  * Class Builder
  *
- * @package Harmony\SDK\HttpClient
+ * @package Harmony\Sdk\HttpClient
  */
 class Builder
 {
