@@ -3,21 +3,21 @@
 namespace Harmony\SDK\Receiver;
 
 /**
- * Class Users
+ * Class Packages
  *
  * @package Harmony\SDK\Receiver
  */
-class Users
+class Packages
 {
 
     use Receiver;
 
     /**
-     * @return array
+     * @return array|string
      * @throws \Http\Client\Exception
      */
-    public function getUser(): array
+    public function getPackagesJson()
     {
-        return $this->getClient()->get('/users');
+        return $this->getClient()->get('/packages.json');
     }
 }

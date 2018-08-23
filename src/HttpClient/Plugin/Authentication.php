@@ -89,7 +89,7 @@ class Authentication implements Plugin
                 $request = $request->withUri($uri);
                 break;
 
-            case Client::AUTH_JWT:
+            case Client::AUTH_BEARER:
                 $request = $request->withHeader('Authorization', sprintf('Bearer %s', $this->tokenOrLogin));
                 break;
 

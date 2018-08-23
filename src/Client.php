@@ -3,27 +3,34 @@
 namespace Harmony\SDK;
 
 use Exception;
+use Http\Client\HttpClient;
 use Harmony\SDK\HttpClient\Builder;
 use Harmony\SDK\HttpClient\Message\ResponseMediator;
 use Harmony\SDK\HttpClient\Plugin\Authentication;
 use Harmony\SDK\HttpClient\Plugin\History;
-use Harmony\SDK\Receiver\AbstractReceiver;
+use Harmony\SDK\Receiver\Receiver;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin;
-use Http\Client\HttpClient;
 use Http\Discovery\UriFactoryDiscovery;
 use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Client
  *
  * @package Harmony\SDK
  */
-class Client extends AbstractApi
+class Client
 {
 
+    /** API constants */
+    const API_URL    = 'https://api.harmonycms.net';
+    const USER_AGENT = 'harmony-sdk (https://github.com/projectharmony/sdk)';
+
     /** Receiver constants */
-    const RECEIVER_USERS = 'Users';
+    const RECEIVER_PACKAGES = 'Packages';
+    const RECEIVER_PROJECTS = 'Projects';
+    const RECEIVER_USERS    = 'Users';
 
     /**
      * Constant for authentication method. Indicates the default, but deprecated
@@ -49,13 +56,19 @@ class Client extends AbstractApi
      * Constant for authentication method. Indicates JSON Web Token
      * authentication required for integration access to the API.
      */
-    const AUTH_JWT = 'jwt';
+    const AUTH_BEARER = 'bearer';
 
     /** @var Builder $httpClientBuilder */
     protected $httpClientBuilder;
 
     /** @var History $responseHistory */
     protected $responseHistory;
+
+    /** @var null|int $page */
+    protected $page;
+
+    /** @var null|int $perPage */
+    protected $perPage;
 
     /**
      * Client constructor.
@@ -70,10 +83,8 @@ class Client extends AbstractApi
         $this->httpClientBuilder->addPlugin(new Plugin\HistoryPlugin($this->responseHistory));
         $this->httpClientBuilder->addPlugin(new Plugin\RedirectPlugin());
         $this->httpClientBuilder->addPlugin(new Plugin\AddHostPlugin(UriFactoryDiscovery::find()
-            ->createUri(AbstractApi::API_URL)));
-        $this->httpClientBuilder->addPlugin(new Plugin\HeaderDefaultsPlugin([
-            'User-Agent' => 'harmony-sdk (https://github.com/projectharmony/sdk)',
-        ]));
+            ->createUri(self::API_URL)));
+        $this->httpClientBuilder->addPlugin(new Plugin\HeaderDefaultsPlugin(['User-Agent' => self::USER_AGENT,]));
     }
 
     /**
@@ -89,15 +100,46 @@ class Client extends AbstractApi
     }
 
     /**
+     * Returns receiver object
+     *
+     * @param string $receiver
+     *
+     * @return null|Receiver
+     * @throws Exception
+     */
+    public function getReceiver(string $receiver)
+    {
+        $class = (string)$this->sprintf(':namespace\Receiver\:receiver', __NAMESPACE__, $receiver);
+        if (class_exists($class)) {
+            return new $class($this);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $token
+     *
+     * @return Client
+     */
+    public function setBearerToken(string $token): Client
+    {
+        $this->authenticate($token, null, self::AUTH_BEARER);
+
+        return $this;
+    }
+
+    /**
      * Authenticate a user for all next requests.
      *
      * @param string      $tokenOrLogin GitHub private token/username/client ID
      * @param null|string $password     GitHub password/secret (optionally can contain $authMethod)
      * @param null|string $authMethod   One of the AUTH_* class constants
      *
+     * @return Client
      * @throws InvalidArgumentException If no authentication method was given
      */
-    public function authenticate($tokenOrLogin, $password = null, $authMethod = null)
+    public function authenticate($tokenOrLogin, $password = null, $authMethod = null): Client
     {
         if (null === $password && null === $authMethod) {
             throw new InvalidArgumentException('You need to specify authentication method!');
@@ -107,7 +149,7 @@ class Client extends AbstractApi
                 self::AUTH_URL_CLIENT_ID,
                 self::AUTH_HTTP_PASSWORD,
                 self::AUTH_HTTP_TOKEN,
-                self::AUTH_JWT
+                self::AUTH_BEARER
             ])) {
             $authMethod = $password;
             $password   = null;
@@ -117,24 +159,131 @@ class Client extends AbstractApi
         }
         $this->getHttpClientBuilder()->removePlugin(Authentication::class);
         $this->getHttpClientBuilder()->addPlugin(new Authentication($tokenOrLogin, $password, $authMethod));
+
+        return $this;
     }
 
     /**
-     * Returns receiver object
+     * Send a GET request with query parameters.
      *
-     * @param string $receiver
+     * @param string $path
+     * @param array  $parameters
+     * @param array  $requestHeaders
      *
-     * @return null|AbstractReceiver
-     * @throws Exception
+     * @return array|string
+     * @throws \Http\Client\Exception
      */
-    public function getReceiver(string $receiver): ?AbstractReceiver
+    public function get(string $path, array $parameters = [], array $requestHeaders = [])
     {
-        $class = (string)$this->sprintf(':namespace\Receiver\:receiver', __NAMESPACE__, $receiver);
-        if (class_exists($class)) {
-            return new $class($this);
+        if (null !== $this->page && !isset($parameters['page'])) {
+            $parameters['page'] = $this->page;
+        }
+        if (null !== $this->perPage && !isset($parameters['per_page'])) {
+            $parameters['per_page'] = $this->perPage;
+        }
+        if (array_key_exists('ref', $parameters) && is_null($parameters['ref'])) {
+            unset($parameters['ref']);
+        }
+        if (count($parameters) > 0) {
+            $path .= '?' . http_build_query($parameters);
         }
 
-        return null;
+        $response = $this->getHttpClient()->get($path, $requestHeaders);
+
+        return ResponseMediator::getContent($response);
+    }
+
+    /**
+     * Send a HEAD request with query parameters.
+     *
+     * @param       $path
+     * @param array $parameters
+     * @param array $requestHeaders
+     *
+     * @return ResponseInterface
+     * @throws \Http\Client\Exception
+     */
+    public function head($path, array $parameters = [], array $requestHeaders = []): ResponseInterface
+    {
+        if (array_key_exists('ref', $parameters) && is_null($parameters['ref'])) {
+            unset($parameters['ref']);
+        }
+        $response = $this->getHttpClient()->head($path . '?' . http_build_query($parameters), $requestHeaders);
+
+        return $response;
+    }
+
+    /**
+     * @param       $path
+     * @param array $parameters
+     * @param array $requestHeaders
+     *
+     * @return array|string
+     * @throws \Http\Client\Exception
+     */
+    public function post($path, array $parameters = [], array $requestHeaders = [])
+    {
+        return $this->postRaw($path, $this->createJsonBody($parameters), $requestHeaders);
+    }
+
+    /**
+     * @param       $path
+     * @param       $body
+     * @param array $requestHeaders
+     *
+     * @return array|string
+     * @throws \Http\Client\Exception
+     */
+    public function postRaw($path, $body, array $requestHeaders = [])
+    {
+        $response = $this->getHttpClient()->post($path, $requestHeaders, $body);
+
+        return ResponseMediator::getContent($response);
+    }
+
+    /**
+     * @param       $path
+     * @param array $parameters
+     * @param array $requestHeaders
+     *
+     * @return array|string
+     * @throws \Http\Client\Exception
+     */
+    public function patch($path, array $parameters = [], array $requestHeaders = [])
+    {
+        $response = $this->getHttpClient()->patch($path, $requestHeaders, $this->createJsonBody($parameters));
+
+        return ResponseMediator::getContent($response);
+    }
+
+    /**
+     * @param       $path
+     * @param array $parameters
+     * @param array $requestHeaders
+     *
+     * @return array|string
+     * @throws \Http\Client\Exception
+     */
+    public function put($path, array $parameters = [], array $requestHeaders = [])
+    {
+        $response = $this->getHttpClient()->put($path, $requestHeaders, $this->createJsonBody($parameters));
+
+        return ResponseMediator::getContent($response);
+    }
+
+    /**
+     * @param       $path
+     * @param array $parameters
+     * @param array $requestHeaders
+     *
+     * @return array|string
+     * @throws \Http\Client\Exception
+     */
+    public function delete($path, array $parameters = [], array $requestHeaders = [])
+    {
+        $response = $this->getHttpClient()->delete($path, $requestHeaders, $this->createJsonBody($parameters));
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
@@ -148,23 +297,56 @@ class Client extends AbstractApi
     /**
      * @return HttpMethodsClient
      */
-    public function getHttpClient(): HttpMethodsClient
+    protected function getHttpClient(): HttpMethodsClient
     {
         return $this->getHttpClientBuilder()->getHttpClient();
     }
 
     /**
-     * @param string $path
-     * @param array  $parameters
-     * @param array  $requestHeaders
+     * Return a formatted string. Modified version of sprintf using colon(:)
      *
-     * @return mixed
+     * @param string $string
+     * @param array  $params
+     *
+     * @return String
+     * @throws Exception
      */
-    public function request(string $path, array $parameters = [], array $requestHeaders = [])
+    protected function sprintf(string $string, ...$params): string
     {
-        $response = $this->getHttpClient()->get($path, $requestHeaders);
+        preg_match_all('/\:([A-Za-z0-9_]+)/', $string, $matches);
+        $matches = $matches[1];
+        if (count($matches)) {
+            $tokens   = [];
+            $replaces = [];
+            foreach ($matches as $key => $value) {
+                if (count($params) > 1 || !is_array($params[0])) {
+                    if (!array_key_exists($key, $params)) {
+                        throw new Exception('Too few arguments, missing argument: ' . $key);
+                    }
+                    $replaces[] = $params[$key];
+                } else {
+                    if (!array_key_exists($value, $params[0])) {
+                        throw new Exception('Missing array argument: ' . $key);
+                    }
+                    $replaces[] = $params[0][$value];
+                }
+                $tokens[] = ':' . $value;
+            }
+            $string = str_replace($tokens, $replaces, $string);
+        }
 
-        return ResponseMediator::getContent($response);
+        return $string;
     }
 
+    /**
+     * Create a JSON encoded version of an array of parameters.
+     *
+     * @param array $parameters Request parameters
+     *
+     * @return null|string
+     */
+    protected function createJsonBody(array $parameters): ?string
+    {
+        return (count($parameters) === 0) ? null : json_encode($parameters, empty($parameters) ? JSON_FORCE_OBJECT : 0);
+    }
 }

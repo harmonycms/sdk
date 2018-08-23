@@ -5,18 +5,18 @@ namespace Harmony\SDK\Receiver;
 use Harmony\SDK\Client;
 
 /**
- * Class AbstractReceiver
+ * Trait Receiver
  *
  * @package Harmony\SDK\Receiver
  */
-abstract class AbstractReceiver
+trait Receiver
 {
 
-    /** @var  mixed */
-    protected $client;
+    /** @var Client $client */
+    private $client;
 
     /**
-     * AbstractReceiver constructor.
+     * Receiver constructor.
      *
      * @param Client $client
      */
@@ -26,19 +26,19 @@ abstract class AbstractReceiver
     }
 
     /**
-     * @return mixed
+     * @return Client
      */
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->client;
     }
 
     /**
-     * @param $client
+     * @param Client $client
      *
-     * @return AbstractReceiver
+     * @return Receiver
      */
-    public function setClient($client): AbstractReceiver
+    public function setClient(Client $client): self
     {
         $this->client = $client;
 
