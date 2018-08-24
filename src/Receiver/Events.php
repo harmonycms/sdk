@@ -33,6 +33,6 @@ class Events
      */
     public function tokenStatus(string $token): array
     {
-        $this->getClient()->get('/token/status', ['token' => $token]);
+        return $this->getClient()->get('/token/status', ['token' => $token]);
     }
 }
