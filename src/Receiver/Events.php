@@ -20,7 +20,7 @@ class Events
      */
     public function ping(): array
     {
-        return $this->getClient()->get('/ping');
+        return (array)$this->getClient()->get('/ping');
     }
 
     /**
