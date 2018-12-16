@@ -18,7 +18,7 @@
     "ext-json": "*",
     "php-http/httplug": "^2.0",
     "php-http/discovery": "^1.4",
-    "php-http/client-common": "^2.0"
+    "php-http/client-common": "2.x-dev"
   },
   "autoload": {
     "psr-4": {
