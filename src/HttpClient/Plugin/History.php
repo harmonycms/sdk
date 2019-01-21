@@ -3,7 +3,7 @@
 namespace Harmony\Sdk\HttpClient\Plugin;
 
 use Http\Client\Common\Plugin\Journal;
-use Http\Client\Exception;
+use Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -37,10 +37,10 @@ class History implements Journal
     }
 
     /**
-     * @param RequestInterface $request
-     * @param Exception        $exception
+     * @param RequestInterface         $request
+     * @param ClientExceptionInterface $exception
      */
-    public function addFailure(RequestInterface $request, Exception $exception)
+    public function addFailure(RequestInterface $request, ClientExceptionInterface $exception)
     {
     }
 }
