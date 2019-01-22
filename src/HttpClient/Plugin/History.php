@@ -3,7 +3,7 @@
 namespace Harmony\Sdk\HttpClient\Plugin;
 
 use Http\Client\Common\Plugin\Journal;
-use Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
