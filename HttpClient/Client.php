@@ -10,7 +10,7 @@ use Harmony\Sdk\HttpClient\Plugin\History;
 use Harmony\Sdk\HttpClient\Receiver\Receiver;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin;
-use Http\Discovery\UriFactoryDiscovery;
+use Http\Discovery\Psr17FactoryDiscovery;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 
@@ -82,7 +82,7 @@ class Client
 
         $this->httpClientBuilder->addPlugin(new Plugin\HistoryPlugin($this->responseHistory));
         $this->httpClientBuilder->addPlugin(new Plugin\RedirectPlugin());
-        $this->httpClientBuilder->addPlugin(new Plugin\AddHostPlugin(UriFactoryDiscovery::find()
+        $this->httpClientBuilder->addPlugin(new Plugin\AddHostPlugin(Psr17FactoryDiscovery::findUrlFactory()
             ->createUri(self::API_URL)));
         $this->httpClientBuilder->addPlugin(new Plugin\HeaderDefaultsPlugin(['User-Agent' => self::USER_AGENT,]));
     }
