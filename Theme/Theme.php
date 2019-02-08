@@ -7,7 +7,7 @@ namespace Harmony\Sdk\Theme;
  *
  * @package Harmony\Sdk\Theme
  */
-class Theme implements ThemeInterface
+abstract class Theme implements ThemeInterface
 {
 
     /** @var string $name */
