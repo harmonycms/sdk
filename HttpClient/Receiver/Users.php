@@ -1,6 +1,8 @@
 <?php
 
-namespace Harmony\Sdk\Receiver;
+namespace Harmony\Sdk\HttpClient\Receiver;
+
+use Http\Client\Exception;
 
 /**
  * Class Users
@@ -14,7 +16,7 @@ class Users
 
     /**
      * @return array
-     * @throws \Http\Client\Exception
+     * @throws Exception
      */
     public function getUser(): array
     {

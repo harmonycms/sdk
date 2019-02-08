@@ -1,6 +1,8 @@
 <?php
 
-namespace Harmony\Sdk\Receiver;
+namespace Harmony\Sdk\HttpClient\Receiver;
+
+use Http\Client\Exception;
 
 /**
  * Class Projects
@@ -14,7 +16,7 @@ class Projects
 
     /**
      * @return array|string
-     * @throws \Http\Client\Exception
+     * @throws Exception
      */
     public function getProjects()
     {
@@ -25,7 +27,7 @@ class Projects
      * @param string $projectId
      *
      * @return array|string
-     * @throws \Http\Client\Exception
+     * @throws Exception
      */
     public function getProject(string $projectId)
     {

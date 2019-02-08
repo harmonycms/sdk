@@ -1,6 +1,8 @@
 <?php
 
-namespace Harmony\Sdk\Receiver;
+namespace Harmony\Sdk\HttpClient\Receiver;
+
+use Http\Client\Exception;
 
 /**
  * Class Events
@@ -16,7 +18,7 @@ class Events
      * Ping API.
      *
      * @return array
-     * @throws \Http\Client\Exception
+     * @throws Exception
      */
     public function ping(): array
     {
@@ -29,7 +31,7 @@ class Events
      * @param string $token
      *
      * @return array
-     * @throws \Http\Client\Exception
+     * @throws Exception
      */
     public function tokenStatus(string $token): array
     {

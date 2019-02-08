@@ -2,7 +2,7 @@
 
 namespace Harmony\Sdk\HttpClient\Message;
 
-use Harmony\Sdk\Exception\ApiLimitExceedException;
+use Harmony\Sdk\HttpClient\Exception\ApiLimitExceedException;
 use Psr\Http\Message\ResponseInterface;
 
 /**

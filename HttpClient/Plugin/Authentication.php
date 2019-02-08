@@ -2,7 +2,7 @@
 
 namespace Harmony\Sdk\HttpClient\Plugin;
 
-use Harmony\Sdk\Client;
+use Harmony\Sdk\HttpClient\Client;
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;

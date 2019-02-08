@@ -1,8 +1,8 @@
 <?php
 
-namespace Harmony\Sdk\Receiver;
+namespace Harmony\Sdk\HttpClient\Receiver;
 
-use Harmony\Sdk\Client;
+use Harmony\Sdk\HttpClient\Client;
 
 /**
  * Trait Receiver

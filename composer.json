@@ -18,17 +18,11 @@
     "ext-json": "*",
     "php-http/httplug": "^2.0",
     "php-http/discovery": "^1.4",
-    "php-http/client-common": "2.0.x-dev"
+    "php-http/client-common": "^2.0"
   },
   "autoload": {
     "psr-4": {
-      "Harmony\\Sdk\\": "src"
-    }
-  },
-  "minimum-stability": "dev",
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0-dev"
+      "Harmony\\Sdk\\": ""
     }
   }
 }
