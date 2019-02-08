@@ -7,6 +7,7 @@ use Http\Client\Common\Plugin;
 use Http\Client\Common\PluginClientFactory;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
+use Http\Discovery\MessageFactoryDiscovery;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Message\MessageFactory;
 use Http\Message\RequestFactory;
@@ -68,7 +69,7 @@ class Builder
                                 StreamFactory $streamFactory = null)
     {
         $this->httpClient     = $httpClient ?: HttpClientDiscovery::find();
-        $this->requestFactory = $requestFactory ?: Psr17FactoryDiscovery::findRequestFactory();
+        $this->requestFactory = $requestFactory ?: MessageFactoryDiscovery::find();
         $this->streamFactory  = $streamFactory ?: Psr17FactoryDiscovery::findStreamFactory();
     }
 
