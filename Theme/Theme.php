@@ -13,6 +13,18 @@ abstract class Theme implements ThemeInterface
     /** @var string $identifier */
     protected $identifier;
 
+    /** @var string $name */
+    protected $name;
+
+    /** @var string $description */
+    protected $description;
+
+    /** @var string $version */
+    protected $version;
+
+    /** @var array $authors */
+    protected $authors = [];
+
     /** @var string $path */
     protected $path;
 
@@ -24,6 +36,12 @@ abstract class Theme implements ThemeInterface
         $pos              = strrpos(static::class, '\\');
         $this->identifier = false === $pos ? static::class : substr(static::class, $pos + 1);
         $this->path       = \dirname((new \ReflectionObject($this))->getFileName());
+
+        $composer          = $this->_parseComposer();
+        $this->name        = $composer['name'];
+        $this->description = $composer['description'] ?? '';
+        $this->version     = $composer['version'] ?? '';
+        $this->authors     = $composer['authors'] ?? [];
     }
 
     /**
@@ -45,13 +63,12 @@ abstract class Theme implements ThemeInterface
     {
         try {
             $reflexionConstant = new \ReflectionClassConstant($this, 'NAME');
-
-            return $reflexionConstant->getValue();
+            $this->name        = $reflexionConstant->getValue();
         }
         catch (\Exception $e) {
         }
 
-        return $this->getIdentifier();
+        return $this->name;
     }
 
     /**
@@ -63,13 +80,32 @@ abstract class Theme implements ThemeInterface
     {
         try {
             $reflexionConstant = new \ReflectionClassConstant($this, 'DESCRIPTION');
-
-            return $reflexionConstant->getValue();
+            $this->description = $reflexionConstant->getValue();
         }
         catch (\Exception $e) {
         }
 
-        return '';
+        return $this->description;
+    }
+
+    /**
+     * Returns the theme version.
+     *
+     * @return string
+     */
+    final public function getVersion(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * Returns the theme authors.
+     *
+     * @return array
+     */
+    final public function getAuthors(): array
+    {
+        return $this->authors;
     }
 
     /**
@@ -96,5 +132,16 @@ abstract class Theme implements ThemeInterface
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    /**
+     * Parse content of `composer.json` file.
+     * Always present in all themes, no need to check if file exists.
+     *
+     * @return array
+     */
+    private function _parseComposer(): array
+    {
+        return json_decode(file_get_contents($this->path . '/composer.json'), true);
     }
 }
