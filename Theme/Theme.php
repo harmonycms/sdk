@@ -10,14 +10,34 @@ namespace Harmony\Sdk\Theme;
 abstract class Theme implements ThemeInterface
 {
 
-    /** @var string $name */
-    protected $name;
+    /** @var string $identifier */
+    protected $identifier;
 
     /** @var string $path */
     protected $path;
 
     /**
-     * Returns the theme name (the class short name).
+     * Theme constructor.
+     */
+    public function __construct()
+    {
+        $pos              = strrpos(static::class, '\\');
+        $this->identifier = false === $pos ? static::class : substr(static::class, $pos + 1);
+        $this->path       = \dirname((new \ReflectionObject($this))->getFileName());
+    }
+
+    /**
+     * Returns the theme identifier.
+     *
+     * @return string The Theme name
+     */
+    final public function getIdentifier(): string
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * Returns the theme name.
      *
      * @return string The Theme name
      */
@@ -25,17 +45,13 @@ abstract class Theme implements ThemeInterface
     {
         try {
             $reflexionConstant = new \ReflectionClassConstant($this, 'NAME');
-            $this->name        = $reflexionConstant->getValue();
+
+            return $reflexionConstant->getValue();
         }
         catch (\Exception $e) {
         }
 
-        if (null === $this->name) {
-            $pos        = strrpos(static::class, '\\');
-            $this->name = false === $pos ? static::class : substr(static::class, $pos + 1);
-        }
-
-        return $this->name;
+        return $this->getIdentifier();
     }
 
     /**
@@ -59,16 +75,16 @@ abstract class Theme implements ThemeInterface
     /**
      * Returns the theme preview image.
      *
-     * @return string The theme preview image
+     * @return null|string The theme preview image
      */
-    public function getPreview(): string
+    public function getPreview(): ?string
     {
         $array = glob($this->getPath() . '/assets/images/preview.{jpg,jpeg,png,gif}', GLOB_BRACE);
         if (isset($array[0])) {
             return sprintf('/themes/%s/%s', '', (new \SplFileInfo($array[0]))->getBasename());
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -79,10 +95,6 @@ abstract class Theme implements ThemeInterface
      */
     public function getPath(): string
     {
-        if (null === $this->path) {
-            $this->path = \dirname((new \ReflectionObject($this))->getFileName());
-        }
-
         return $this->path;
     }
 }

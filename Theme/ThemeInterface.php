@@ -15,7 +15,7 @@ interface ThemeInterface
      *
      * @return string The Theme name
      */
-    public function getName(): string;
+    public function getIdentifier(): string;
 
     /**
      * Returns the theme description.
@@ -27,9 +27,9 @@ interface ThemeInterface
     /**
      * Returns the theme preview image.
      *
-     * @return string The theme preview image
+     * @return null|string The theme preview image
      */
-    public function getPreview(): string;
+    public function getPreview(): ?string;
 
     /**
      * Gets the Theme directory path.
