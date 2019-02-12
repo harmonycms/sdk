@@ -33,8 +33,8 @@ abstract class Theme implements ThemeInterface
      */
     public function __construct()
     {
-        $pos              = strrpos(static::class, '\\');
-        $this->identifier = false === $pos ? static::class : substr(static::class, $pos + 1);
+        $pos              = \strrpos(static::class, '\\');
+        $this->identifier = false === $pos ? static::class : \substr(static::class, $pos + 1);
         $this->path       = \dirname((new \ReflectionObject($this))->getFileName());
 
         $composer          = $this->_parseComposer();
@@ -109,13 +109,23 @@ abstract class Theme implements ThemeInterface
     }
 
     /**
+     * Check if the theme has settings.
+     *
+     * @return bool
+     */
+    final public function hasSettings(): bool
+    {
+        return \file_exists($this->path . DIRECTORY_SEPARATOR . 'settings.yaml');
+    }
+
+    /**
      * Returns the theme preview image.
      *
      * @return null|string The theme preview image
      */
     public function getPreview(): ?string
     {
-        $array = glob($this->getPath() . '/assets/images/preview.{jpg,jpeg,png,gif}', GLOB_BRACE);
+        $array = \glob($this->getPath() . '/assets/images/preview.{jpg,jpeg,png,gif}', GLOB_BRACE);
         if (isset($array[0])) {
             return sprintf('/themes/%s/%s', '', (new \SplFileInfo($array[0]))->getBasename());
         }
@@ -142,6 +152,6 @@ abstract class Theme implements ThemeInterface
      */
     private function _parseComposer(): array
     {
-        return json_decode(file_get_contents($this->path . '/composer.json'), true);
+        return \json_decode(\file_get_contents($this->path . DIRECTORY_SEPARATOR . 'composer.json'), true);
     }
 }

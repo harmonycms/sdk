@@ -18,11 +18,32 @@ interface ThemeInterface
     public function getIdentifier(): string;
 
     /**
+     * Returns the theme name.
+     *
+     * @return string The Theme name
+     */
+    public function getName(): string;
+
+    /**
      * Returns the theme description.
      *
      * @return string The Theme description
      */
     public function getDescription(): string;
+
+    /**
+     * Returns the theme version.
+     *
+     * @return string
+     */
+    public function getVersion(): string;
+
+    /**
+     * Returns the theme authors.
+     *
+     * @return array
+     */
+    public function getAuthors(): array;
 
     /**
      * Returns the theme preview image.
@@ -38,4 +59,11 @@ interface ThemeInterface
      * @return string The Theme absolute path
      */
     public function getPath(): string;
+
+    /**
+     * Check if the theme has settings.
+     *
+     * @return bool
+     */
+    public function hasSettings(): bool;
 }
