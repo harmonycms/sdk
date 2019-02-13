@@ -28,6 +28,9 @@ abstract class Theme implements ThemeInterface
     /** @var string $path */
     protected $path;
 
+    /** @var string $settingPath */
+    protected $settingPath;
+
     /**
      * Theme constructor.
      */
@@ -42,6 +45,8 @@ abstract class Theme implements ThemeInterface
         $this->description = $composer['description'] ?? '';
         $this->version     = $composer['version'] ?? '';
         $this->authors     = $composer['authors'] ?? [];
+
+        $this->settingPath = $this->path . DIRECTORY_SEPARATOR . 'settings.yaml';
     }
 
     /**
@@ -115,7 +120,17 @@ abstract class Theme implements ThemeInterface
      */
     final public function hasSettings(): bool
     {
-        return \file_exists($this->path . DIRECTORY_SEPARATOR . 'settings.yaml');
+        return \file_exists($this->settingPath);
+    }
+
+    /**
+     * Returns the full path for `settings.yaml` file.
+     *
+     * @return string
+     */
+    final public function getSettingPath(): string
+    {
+        return $this->settingPath;
     }
 
     /**

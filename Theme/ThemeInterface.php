@@ -66,4 +66,11 @@ interface ThemeInterface
      * @return bool
      */
     public function hasSettings(): bool;
+
+    /**
+     * Returns the full path for `settings.yaml` file.
+     *
+     * @return string
+     */
+    public function getSettingPath(): string;
 }
