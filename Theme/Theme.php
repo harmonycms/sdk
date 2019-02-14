@@ -28,6 +28,9 @@ abstract class Theme implements ThemeInterface
     /** @var string $path */
     protected $path;
 
+    /** @var string $shortName */
+    protected $shortName;
+
     /** @var string $settingPath */
     protected $settingPath;
 
@@ -39,6 +42,8 @@ abstract class Theme implements ThemeInterface
         $pos              = \strrpos(static::class, '\\');
         $this->identifier = false === $pos ? static::class : \substr(static::class, $pos + 1);
         $this->path       = \dirname((new \ReflectionObject($this))->getFileName());
+        $this->shortName  = implode(DIRECTORY_SEPARATOR,
+            array_slice(explode(DIRECTORY_SEPARATOR, $this->path), - 2, 2));
 
         $composer          = $this->_parseComposer();
         $this->name        = $composer['name'];
@@ -57,6 +62,16 @@ abstract class Theme implements ThemeInterface
     final public function getIdentifier(): string
     {
         return $this->identifier;
+    }
+
+    /**
+     * Returns theme short name, formatted has: vendor/name
+     *
+     * @return string
+     */
+    final public function getShortName(): string
+    {
+        return $this->shortName;
     }
 
     /**
@@ -154,7 +169,7 @@ abstract class Theme implements ThemeInterface
      *
      * @return string The Theme absolute path
      */
-    public function getPath(): string
+    final public function getPath(): string
     {
         return $this->path;
     }

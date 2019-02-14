@@ -61,6 +61,13 @@ interface ThemeInterface
     public function getPath(): string;
 
     /**
+     * Returns theme short name, formatted has: vendor/name
+     *
+     * @return string
+     */
+    public function getShortName(): string;
+
+    /**
      * Check if the theme has settings.
      *
      * @return bool
