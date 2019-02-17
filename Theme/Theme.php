@@ -34,6 +34,9 @@ abstract class Theme implements ThemeInterface
     /** @var string $settingPath */
     protected $settingPath;
 
+    /** @var null|ThemeInterface $parent */
+    protected $parent;
+
     /**
      * Theme constructor.
      */
@@ -52,6 +55,14 @@ abstract class Theme implements ThemeInterface
         $this->authors     = $composer['authors'] ?? [];
 
         $this->settingPath = $this->path . DIRECTORY_SEPARATOR . 'settings.yaml';
+
+        try {
+            $reflexionConstant = new \ReflectionClassConstant($this, 'PARENT');
+            $value             = $reflexionConstant->getValue();
+            $this->parent      = new $value();
+        }
+        catch (\Exception $e) {
+        }
     }
 
     /**
@@ -160,6 +171,16 @@ abstract class Theme implements ThemeInterface
     }
 
     /**
+     * Get parent theme (FQDN class).
+     *
+     * @return null|ThemeInterface
+     */
+    final public function getParent(): ?ThemeInterface
+    {
+        return $this->parent;
+    }
+
+    /**
      * Returns the theme preview image.
      *
      * @return null|string The theme preview image
@@ -172,16 +193,6 @@ abstract class Theme implements ThemeInterface
         }
 
         return null;
-    }
-
-    /**
-     * Get parent theme (FQDN class).
-     *
-     * @return string
-     */
-    public function getParent(): string
-    {
-        return '';
     }
 
     /**

@@ -84,7 +84,7 @@ interface ThemeInterface
     /**
      * Get parent theme (FQDN class).
      *
-     * @return string
+     * @return null|ThemeInterface
      */
-    public function getParent(): string;
+    public function getParent(): ?ThemeInterface;
 }
