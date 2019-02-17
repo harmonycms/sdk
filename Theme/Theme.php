@@ -149,6 +149,17 @@ abstract class Theme implements ThemeInterface
     }
 
     /**
+     * Gets the Theme directory path.
+     * The path should always be returned as a Unix path (with /).
+     *
+     * @return string The Theme absolute path
+     */
+    final public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
      * Returns the theme preview image.
      *
      * @return null|string The theme preview image
@@ -164,14 +175,13 @@ abstract class Theme implements ThemeInterface
     }
 
     /**
-     * Gets the Theme directory path.
-     * The path should always be returned as a Unix path (with /).
+     * Get parent theme (FQDN class).
      *
-     * @return string The Theme absolute path
+     * @return string
      */
-    final public function getPath(): string
+    public function getParent(): string
     {
-        return $this->path;
+        return '';
     }
 
     /**

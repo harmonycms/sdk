@@ -80,11 +80,4 @@ interface ThemeInterface
      * @return string
      */
     public function getSettingPath(): string;
-
-    /**
-     * Get parent theme (FQDN class).
-     *
-     * @return string
-     */
-    public function getParent(): string;
 }
