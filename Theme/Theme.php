@@ -189,7 +189,7 @@ abstract class Theme implements ThemeInterface
     {
         $array = \glob($this->getPath() . '/assets/images/preview.{jpg,jpeg,png,gif}', GLOB_BRACE);
         if (isset($array[0])) {
-            return sprintf('/themes/%s/%s', '', (new \SplFileInfo($array[0]))->getBasename());
+            return sprintf('/themes/%s/images/%s', $this->shortName, (new \SplFileInfo($array[0]))->getBasename());
         }
 
         return null;
