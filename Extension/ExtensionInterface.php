@@ -44,4 +44,12 @@ interface ExtensionInterface
      * @return array
      */
     public function getAuthors(): array;
+
+    /**
+     * Gets the Extension directory path.
+     * The path should always be returned as a Unix path (with /).
+     *
+     * @return string The Extension absolute path
+     */
+    public function getPath(): string;
 }

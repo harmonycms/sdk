@@ -124,6 +124,17 @@ abstract class AbstractExtension implements ExtensionInterface
     }
 
     /**
+     * Gets the Extension directory path.
+     * The path should always be returned as a Unix path (with /).
+     *
+     * @return string The Extension absolute path
+     */
+    final public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
      * Parse content of `composer.json` file.
      * Always present in all extensions, no need to check if file exists.
      *
