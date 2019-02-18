@@ -3,11 +3,11 @@
 namespace Harmony\Sdk\Extension;
 
 /**
- * Interface MustUserInterface
+ * Interface MustUseInterface
  *
  * @package Harmony\Sdk\Extension
  */
-interface MustUserInterface
+interface MustUseInterface
 {
 
 }
