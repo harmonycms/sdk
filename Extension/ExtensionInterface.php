@@ -52,4 +52,11 @@ interface ExtensionInterface
      * @return string The Extension absolute path
      */
     public function getPath(): string;
+
+    /**
+     * Returns extension short name, formatted has: vendor/name
+     *
+     * @return string
+     */
+    public function getShortName(): string;
 }
