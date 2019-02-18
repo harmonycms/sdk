@@ -122,4 +122,15 @@ abstract class AbstractExtension implements ExtensionInterface
     {
         return $this->authors;
     }
+
+    /**
+     * Parse content of `composer.json` file.
+     * Always present in all extensions, no need to check if file exists.
+     *
+     * @return array
+     */
+    private function _parseComposer(): array
+    {
+        return \json_decode(\file_get_contents($this->path . DIRECTORY_SEPARATOR . 'composer.json'), true);
+    }
 }
