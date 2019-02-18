@@ -10,6 +10,11 @@ namespace Harmony\Sdk\Extension;
 abstract class AbstractExtension implements ExtensionInterface
 {
 
+    /** Constants */
+    public const COMPONENT = 'component';
+    public const MODULE    = 'module';
+    public const PLUGIN    = 'plugin';
+
     /** @var string $identifier */
     protected $identifier;
 
@@ -31,6 +36,9 @@ abstract class AbstractExtension implements ExtensionInterface
     /** @var array $authors */
     protected $authors;
 
+    /** @var string $extensionType */
+    private $extensionType;
+
     /**
      * AbstractExtension constructor.
      */
@@ -47,6 +55,24 @@ abstract class AbstractExtension implements ExtensionInterface
         $this->description = $composer['description'] ?? '';
         $this->version     = $composer['version'] ?? '';
         $this->authors     = $composer['authors'] ?? [];
+
+        if (\is_subclass_of($this, Component::class)) {
+            $this->extensionType = self::COMPONENT;
+        } elseif (\is_subclass_of($this, Module::class)) {
+            $this->extensionType = self::MODULE;
+        } elseif (\is_subclass_of($this, Plugin::class)) {
+            $this->extensionType = self::PLUGIN;
+        }
+    }
+
+    /**
+     * Returns the type of extension (component, module or plugin).
+     *
+     * @return string|null
+     */
+    final public function getExtensionType(): ?string
+    {
+        return $this->extensionType;
     }
 
     /**

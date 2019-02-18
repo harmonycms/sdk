@@ -11,6 +11,13 @@ interface ExtensionInterface
 {
 
     /**
+     * Returns the type of extension (component, module or plugin).
+     *
+     * @return string|null
+     */
+    public function getExtensionType(): ?string;
+
+    /**
      * Returns the extension name.
      *
      * @return string The Extension name
