@@ -10,8 +10,9 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @package Harmony\Sdk\Extension
  */
-abstract class Plugin extends AbstractExtension implements ContainerAwareInterface
+abstract class Plugin extends AbstractExtension implements ContainerAwareInterface, ContainerExtensionInterface
 {
 
     use ContainerAwareTrait;
+    use ContainerExtensionTrait;
 }
