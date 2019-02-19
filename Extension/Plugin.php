@@ -2,12 +2,16 @@
 
 namespace Harmony\Sdk\Extension;
 
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+
 /**
  * Class Plugin
  *
  * @package Harmony\Sdk\Extension
  */
-abstract class Plugin extends AbstractExtension
+abstract class Plugin extends AbstractExtension implements ContainerAwareInterface
 {
 
+    use ContainerAwareTrait;
 }
