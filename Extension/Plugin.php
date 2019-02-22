@@ -21,7 +21,7 @@ abstract class Plugin extends AbstractExtension implements ContainerAwareInterfa
      *
      * @return void
      */
-    public function boot(): void
+    public function boot()
     {
     }
 }
