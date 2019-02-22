@@ -21,7 +21,7 @@ abstract class Module extends AbstractExtension implements ContainerAwareInterfa
      *
      * @return void
      */
-    public function boot(): void
+    public function boot()
     {
     }
 }
