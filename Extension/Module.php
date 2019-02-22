@@ -10,9 +10,18 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  *
  * @package Harmony\Sdk\Extension
  */
-abstract class Module extends AbstractExtension implements ContainerAwareInterface, ContainerExtensionInterface
+abstract class Module extends AbstractExtension implements ContainerAwareInterface, ContainerExtensionInterface, BootableInterface
 {
 
     use ContainerAwareTrait;
     use ContainerExtensionTrait;
+
+    /**
+     * Boots the Extension.
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+    }
 }
