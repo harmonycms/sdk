@@ -30,6 +30,9 @@ abstract class AbstractExtension implements ExtensionInterface
     /** @var string $description */
     protected $description;
 
+    /** @var string $homepage */
+    protected $homepage;
+
     /** @var string $version */
     protected $version;
 
@@ -53,6 +56,7 @@ abstract class AbstractExtension implements ExtensionInterface
         $composer          = $this->_parseComposer();
         $this->name        = $composer['name'];
         $this->description = $composer['description'] ?? '';
+        $this->homepage    = $composer['homepage'] ?? '';
         $this->version     = $composer['version'] ?? '';
         $this->authors     = $composer['authors'] ?? [];
 
@@ -127,6 +131,16 @@ abstract class AbstractExtension implements ExtensionInterface
         }
 
         return $this->description;
+    }
+
+    /**
+     * Returns the extension homepage.
+     *
+     * @return string
+     */
+    final public function getHomepage(): string
+    {
+        return $this->homepage;
     }
 
     /**

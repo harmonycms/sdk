@@ -39,6 +39,13 @@ interface ExtensionInterface
     public function getDescription(): string;
 
     /**
+     * Returns the extension homepage.
+     *
+     * @return string
+     */
+    public function getHomepage(): string;
+
+    /**
      * Returns the extension version.
      *
      * @return string
