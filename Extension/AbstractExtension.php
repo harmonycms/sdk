@@ -2,6 +2,19 @@
 
 namespace Harmony\Sdk\Extension;
 
+use Exception;
+use ReflectionClassConstant;
+use ReflectionObject;
+use function array_slice;
+use function dirname;
+use function explode;
+use function file_get_contents;
+use function implode;
+use function is_subclass_of;
+use function json_decode;
+use function strrpos;
+use function substr;
+
 /**
  * Class AbstractExtension
  *
@@ -47,9 +60,9 @@ abstract class AbstractExtension implements ExtensionInterface
      */
     public function __construct()
     {
-        $pos              = \strrpos(static::class, '\\');
-        $this->identifier = false === $pos ? static::class : \substr(static::class, $pos + 1);
-        $this->path       = \dirname((new \ReflectionObject($this))->getFileName());
+        $pos              = strrpos(static::class, '\\');
+        $this->identifier = false === $pos ? static::class : substr(static::class, $pos + 1);
+        $this->path       = dirname((new ReflectionObject($this))->getFileName());
         $this->shortName  = implode(DIRECTORY_SEPARATOR,
             array_slice(explode(DIRECTORY_SEPARATOR, $this->path), - 2, 2));
 
@@ -60,11 +73,11 @@ abstract class AbstractExtension implements ExtensionInterface
         $this->version     = $composer['version'] ?? '';
         $this->authors     = $composer['authors'] ?? [];
 
-        if (\is_subclass_of($this, Component::class)) {
+        if (is_subclass_of($this, Component::class)) {
             $this->extensionType = self::COMPONENT;
-        } elseif (\is_subclass_of($this, Module::class)) {
+        } elseif (is_subclass_of($this, Module::class)) {
             $this->extensionType = self::MODULE;
-        } elseif (\is_subclass_of($this, Plugin::class)) {
+        } elseif (is_subclass_of($this, Plugin::class)) {
             $this->extensionType = self::PLUGIN;
         }
     }
@@ -107,10 +120,10 @@ abstract class AbstractExtension implements ExtensionInterface
     final public function getName(): string
     {
         try {
-            $reflexionConstant = new \ReflectionClassConstant($this, 'NAME');
+            $reflexionConstant = new ReflectionClassConstant($this, 'NAME');
             $this->name        = $reflexionConstant->getValue();
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
         }
 
         return $this->name;
@@ -124,10 +137,10 @@ abstract class AbstractExtension implements ExtensionInterface
     final public function getDescription(): string
     {
         try {
-            $reflexionConstant = new \ReflectionClassConstant($this, 'DESCRIPTION');
+            $reflexionConstant = new ReflectionClassConstant($this, 'DESCRIPTION');
             $this->description = $reflexionConstant->getValue();
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
         }
 
         return $this->description;
@@ -182,6 +195,6 @@ abstract class AbstractExtension implements ExtensionInterface
      */
     private function _parseComposer(): array
     {
-        return \json_decode(\file_get_contents($this->path . DIRECTORY_SEPARATOR . 'composer.json'), true);
+        return json_decode(file_get_contents($this->path . DIRECTORY_SEPARATOR . 'composer.json'), true);
     }
 }
