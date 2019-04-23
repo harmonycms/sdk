@@ -87,4 +87,11 @@ interface ThemeInterface
      * @return null|ThemeInterface
      */
     public function getParent(): ?ThemeInterface;
+
+    /**
+     * Get the theme translation domain.
+     *
+     * @return string
+     */
+    public function getTransDomain(): string;
 }

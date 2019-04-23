@@ -2,6 +2,22 @@
 
 namespace Harmony\Sdk\Theme;
 
+use Exception;
+use ReflectionClassConstant;
+use ReflectionObject;
+use SplFileInfo;
+use function array_slice;
+use function dirname;
+use function explode;
+use function file_exists;
+use function file_get_contents;
+use function glob;
+use function implode;
+use function json_decode;
+use function sprintf;
+use function strrpos;
+use function substr;
+
 /**
  * Class Theme
  *
@@ -37,15 +53,19 @@ abstract class Theme implements ThemeInterface
     /** @var null|ThemeInterface $parent */
     protected $parent;
 
+    /** @var string $translationDomain */
+    protected $translationDomain;
+
     /**
      * Theme constructor.
      */
     public function __construct()
     {
-        $pos              = \strrpos(static::class, '\\');
-        $this->identifier = false === $pos ? static::class : \substr(static::class, $pos + 1);
-        $this->path       = \dirname((new \ReflectionObject($this))->getFileName());
-        $this->shortName  = implode(DIRECTORY_SEPARATOR,
+        $pos                     = strrpos(static::class, '\\');
+        $this->identifier        = false === $pos ? static::class : substr(static::class, $pos + 1);
+        $this->translationDomain = $this->identifier;
+        $this->path              = dirname((new ReflectionObject($this))->getFileName());
+        $this->shortName         = implode(DIRECTORY_SEPARATOR,
             array_slice(explode(DIRECTORY_SEPARATOR, $this->path), - 2, 2));
 
         $composer          = $this->_parseComposer();
@@ -57,11 +77,11 @@ abstract class Theme implements ThemeInterface
         $this->settingPath = $this->path . DIRECTORY_SEPARATOR . 'settings.yaml';
 
         try {
-            $reflexionConstant = new \ReflectionClassConstant($this, 'PARENT');
+            $reflexionConstant = new ReflectionClassConstant($this, 'PARENT');
             $value             = $reflexionConstant->getValue();
             $this->parent      = new $value();
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
         }
     }
 
@@ -93,10 +113,10 @@ abstract class Theme implements ThemeInterface
     final public function getName(): string
     {
         try {
-            $reflexionConstant = new \ReflectionClassConstant($this, 'NAME');
+            $reflexionConstant = new ReflectionClassConstant($this, 'NAME');
             $this->name        = $reflexionConstant->getValue();
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
         }
 
         return $this->name;
@@ -110,10 +130,10 @@ abstract class Theme implements ThemeInterface
     final public function getDescription(): string
     {
         try {
-            $reflexionConstant = new \ReflectionClassConstant($this, 'DESCRIPTION');
+            $reflexionConstant = new ReflectionClassConstant($this, 'DESCRIPTION');
             $this->description = $reflexionConstant->getValue();
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
         }
 
         return $this->description;
@@ -146,7 +166,7 @@ abstract class Theme implements ThemeInterface
      */
     final public function hasSettings(): bool
     {
-        return \file_exists($this->settingPath);
+        return file_exists($this->settingPath);
     }
 
     /**
@@ -181,15 +201,25 @@ abstract class Theme implements ThemeInterface
     }
 
     /**
+     * Get the theme translation domain.
+     *
+     * @return string
+     */
+    final public function getTransDomain(): string
+    {
+        return $this->translationDomain;
+    }
+
+    /**
      * Returns the theme preview image.
      *
      * @return null|string The theme preview image
      */
     public function getPreview(): ?string
     {
-        $array = \glob($this->getPath() . '/assets/images/preview.{jpg,jpeg,png,gif}', GLOB_BRACE);
+        $array = glob($this->getPath() . '/assets/images/preview.{jpg,jpeg,png,gif}', GLOB_BRACE);
         if (isset($array[0])) {
-            return sprintf('/themes/%s/images/%s', $this->shortName, (new \SplFileInfo($array[0]))->getBasename());
+            return sprintf('/themes/%s/images/%s', $this->shortName, (new SplFileInfo($array[0]))->getBasename());
         }
 
         return null;
@@ -203,6 +233,6 @@ abstract class Theme implements ThemeInterface
      */
     private function _parseComposer(): array
     {
-        return \json_decode(\file_get_contents($this->path . DIRECTORY_SEPARATOR . 'composer.json'), true);
+        return json_decode(file_get_contents($this->path . DIRECTORY_SEPARATOR . 'composer.json'), true);
     }
 }
